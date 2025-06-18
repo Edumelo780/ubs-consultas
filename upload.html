@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload CSV - UBS Santa Gertrudes</title>
+</head>
+<body>
+  <h2>Importar Lista de Consultas</h2>
+  <input type="file" id="csvFile" accept=".csv" />
+  <ul id="linksGerados"></ul>
+
+  <script>
+    document.getElementById('csvFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const lines = event.target.result.split('\n');
+        const header = lines[0].split(',');
+        const nomeIdx = header.indexOf("Nome");
+        const telefoneIdx = header.indexOf("Telefone");
+
+        const ul = document.getElementById("linksGerados");
+        ul.innerHTML = "";
+
+        for (let i = 1; i < lines.length; i++) {
+          const cols = lines[i].split(',');
+          if (cols.length > 1) {
+            const nome = encodeURIComponent(cols[nomeIdx]);
+            const id = btoa(cols[telefoneIdx] + "_" + i);
+            const link = `../public/index.html?id=${id}&nome=${nome}`;
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="${link}" target="_blank">${cols[nomeIdx]}</a>`;
+            ul.appendChild(li);
+          }
+        }
+      };
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>

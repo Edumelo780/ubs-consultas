@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirmação de Consulta</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    function responder(resposta) {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const nome = params.get('nome');
+      const data = new Date().toISOString();
+
+      const respostaData = { id, nome, resposta, data };
+      const storage = JSON.parse(localStorage.getItem('respostas') || "[]");
+      storage.push(respostaData);
+      localStorage.setItem('respostas', JSON.stringify(storage));
+
+      document.getElementById('mensagem').innerText = "Obrigado! Sua resposta foi registrada com sucesso.";
+      document.getElementById('botoes').style.display = 'none';
+    }
+  </script>
+</head>
+<body>
+  <h2>Olá! Aqui é da UBS Santa Gertrudes.</h2>
+  <p>Estamos entrando em contato para confirmar sua consulta.</p>
+  <div id="botoes">
+    <button onclick="responder('Confirmar')">✅ Confirmar</button>
+    <button onclick="responder('Cancelar')">❌ Cancelar</button>
+    <button onclick="responder('Reagendar')">📆 Reagendar</button>
+    <button onclick="responder('Não sou este paciente')">🚫 Não sou este paciente</button>
+  </div>
+  <p id="mensagem" style="color: green; font-weight: bold;"></p>
+</body>
+</html>
