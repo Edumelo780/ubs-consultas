@@ -1,9 +1,9 @@
 {
-  "name": "Confirmação de Consulta - UBS",
-  "short_name": "Consulta UBS",
+  "name": "UBS Consultas",
+  "short_name": "Consultas UBS",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "description": "PWA para confirmação de consultas da UBS",
+  "description": "Confirmação de consultas da UBS",
   "icons": []
 }

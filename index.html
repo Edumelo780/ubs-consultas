@@ -1,111 +1,28 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
-  <title>Confirmação de Consulta</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Confirmação de Consulta - UBS</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="container">
-    <h1>UBS Santa Gertrudes</h1>
-    <p id="mensagem"></p>
+    <main>
+        <h1>Confirmação de Consulta</h1>
+        <p><strong>Nome:</strong> <span id="nome">João da Silva</span></p>
+        <p><strong>Telefone:</strong> <span id="telefone">(11) 91234-5678</span></p>
+        <p><strong>Profissional:</strong> <span id="profissional">Dra. Fernanda - Médica</span></p>
+        <p><strong>Data:</strong> <span id="data">17/06/2025</span></p>
+        <p><strong>Hora:</strong> <span id="hora">14:00</span></p>
 
-    <div class="botoes">
-      <button onclick="responder('confirmado')">Confirmar</button>
-      <button onclick="responder('cancelado')">Cancelar</button>
-      <button onclick="responder('remarcar')">Remarcar</button>
-      <button onclick="responder('nao_eu')">Não sou essa pessoa</button>
-    </div>
-
-    <p id="status"></p>
-  </main>
-  <script src="app.js"></script>
+        <div class="botoes">
+            <button onclick="enviarResposta('Confirmar')">✅ Confirmar</button>
+            <button onclick="enviarResposta('Cancelar')">❌ Cancelar</button>
+            <button onclick="enviarResposta('Remarcar')">📅 Remarcar</button>
+            <button onclick="enviarResposta('Não sou esse paciente')">🚫 Não sou eu</button>
+        </div>
+    </main>
+    <script src="app.js"></script>
 </body>
 </html>
-
-/* style.css */
-body {
-  font-family: sans-serif;
-  background: #f7f7f7;
-  text-align: center;
-  padding: 2em;
-}
-.container {
-  max-width: 400px;
-  margin: auto;
-  background: white;
-  padding: 2em;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-button {
-  padding: 10px;
-  margin: 10px;
-  font-size: 16px;
-  width: 80%;
-  border: none;
-  border-radius: 6px;
-  background: #28a745;
-  color: white;
-  cursor: pointer;
-}
-button:hover {
-  background: #218838;
-}
-
-/* app.js */
-const urlParams = new URLSearchParams(window.location.search);
-const nome = urlParams.get('nome') || 'Paciente';
-const horario = urlParams.get('horario') || 'em breve';
-const profissional = urlParams.get('profissional') || 'profissional de saúde';
-const id = urlParams.get('id') || '000';
-
-document.getElementById("mensagem").innerText =
-  `Olá ${nome}, sua consulta está agendada com ${profissional} no dia ${horario}. Como deseja proceder?`;
-
-function responder(status) {
-  fetch(`https://seuservidor.com/api/responder`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id, nome, status })
-  })
-    .then(res => res.ok ? "Resposta registrada com sucesso." : "Erro ao registrar resposta.")
-    .then(msg => document.getElementById("status").innerText = msg)
-    .catch(err => document.getElementById("status").innerText = "Erro de conexão.");
-}
-
-/* manifest.json */
-{
-  "name": "UBS Santa Gertrudes - Confirmação de Consulta",
-  "short_name": "UBS Consulta",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#28a745",
-  "icons": []
-}
-
-/* service-worker.js */
-self.addEventListener('install', function(e) {
-  e.waitUntil(
-    caches.open('ubs-consultas').then(function(cache) {
-      return cache.addAll([
-        '/',
-        '/index.html',
-        '/style.css',
-        '/app.js'
-      ]);
-    })
-  );
-});
-
-self.addEventListener('fetch', function(e) {
-  e.respondWith(
-    caches.match(e.request).then(function(response) {
-      return response || fetch(e.request);
-    })
-  );
-});
